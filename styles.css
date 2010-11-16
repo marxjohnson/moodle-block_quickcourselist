@@ -1,0 +1,7 @@
+body.jsenabled .block_quickcourselist .submitbutton {
+    display: none;
+}
+
+.block_quickcourselist .quickcourseprogress {
+    visibility: hidden;
+}

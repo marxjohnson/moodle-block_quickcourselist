@@ -1,6 +1,6 @@
 <?php
 
-$block_quickcourselist_capabilities = array(
+$capabilities = array(
 
     'block/quickcourselist:use' => array(
 

@@ -1,4 +1,3 @@
-
 function quickcoursesearch(course){
 	var progress = YAHOO.util.Dom.get('quickcourseprogress');
     var course = YAHOO.util.Dom.get('quickcourselistsearch').value;
