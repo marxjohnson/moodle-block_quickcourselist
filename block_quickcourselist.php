@@ -29,7 +29,7 @@ class block_quickcourselist extends block_base {
 
     function init() {
         $this->content_type = BLOCK_TYPE_TEXT;
-        $this->title = '<a name="quickcourselistanchor"></a>'.get_string('quickcourselist','block_quickcourselist');
+        $this->title = get_string('quickcourselist','block_quickcourselist');
     }
 
     //stop it showing up on any add block lists
@@ -43,37 +43,46 @@ class block_quickcourselist extends block_base {
     }
 
     function get_content() {
-        global $CFG;
+        global $CFG, $DB;
+        if ($this->content !== NULL) {
+            return $this->content;
+        }
 
         $context_block = get_context_instance(CONTEXT_BLOCK, $this->instance->id);
-        $course = optional_param('quickcourselistsearch', '', PARAM_TEXT);
-        $submit = optional_param('quickcoursesubmit', false, PARAM_TEXT);
+        $search = optional_param('quickcourselistsearch', '', PARAM_TEXT);
+        $quickcoursesubmit = optional_param('quickcoursesubmit', false, PARAM_TEXT);
 
         if (has_capability('block/quickcourselist:use', $context_block)) {
-            $this->content->text = '<form action="'.$CFG->wwwroot.$_SERVER['REQUEST_URI'].'#quickcourselistanchor" method="post">
-            <input style="width:120px;" autocomplete="off" onkeyup="quickcoursesearch('.$course.')" name="quickcourselistsearch" id="quickcourselistsearch" value="'.$course.'" />
-            <span id="quickcourseprogress" style="visibility:hidden;"><img src="'.$CFG->wwwroot.'/blocks/quickcourselist/pix/ajax-loader.gif" alt="Loading.." /></span>
-            <noscript><input type="submit" name="quickcoursesubmit" value="Search" /></noscript></form>
-            <div id="quickcourselist">';
 
-            if(!empty($submit)) {
-                $query='SELECT id,shortname,fullname FROM '.$CFG->prefix.'course WHERE id <>'.SITEID.' AND (shortname LIKE \'%'.$course.'%\' OR fullname LIKE \'%'.$course.'%\')';
-                    if(!has_capability('moodle/course:viewhiddencourses',$context_block)){$query.=' AND visible=1';}
+            $list_contents = '';
+            $anchor = html_writer::tag('a', '', array('name' => 'quickcourselistanchor'));
+            $input = html_writer::empty_tag('input', array('autocomplete' => 'off', 'name' => 'quickcourselistsearch', 'id' => 'quickcourselistsearch', 'value' => $search));
+            $progress = html_writer::empty_tag('img', array('src' => $this->page->theme->pix_url('i/loading_small', 'moodle'), 'class' => 'quickcourseprogress', 'alt' => get_string('loading', 'block_quickcourselist')));
+            $submit = html_writer::empty_tag('input', array('type' => 'submit', 'name' => 'quickcoursesubmit', 'class' => 'submitbutton', 'value' => get_string('search')));
+            $form = html_writer::tag('form', $input.$progress.$submit, array('method' => 'post', 'action' => $this->page->url->out().'#quickcourselistanchor'));
+            
+            if(!empty($quickcoursesubmit)) {
+                $params = array(SITEID, "%$search%", "%$search%");
+                $where = 'id != ? AND (shortname LIKE ? OR fullname LIKE ?)';
 
-                    if($courses=get_records_sql($query)) {
-                        foreach ($courses as $course) {
-                            $this->content->text .= '<div><a href="'.$CFG->wwwroot.'/course/view.php?id='.$course->id.'">'.$course->shortname.': '.$course->fullname.'</a></div>';
-                        }
+                if(!has_capability('moodle/course:viewhiddencourses',$context_block)) {
+                    $where .= ' AND visible = 1';
+                }
+
+                if($courses = $DB->get_records_select('course', $where, $params)) {
+                    foreach ($courses as $course) {
+                        $url = new moodle_url('/course/view.php', array('id' => $course->id));
+                        $link = html_writer::tag('a', $course->shortname.': '.$course->fullname, array('href' => $url->out()));
+                        $li = html_writer::tag('li', $link);
+                        $list_contents .= $li;
                     }
+                }
             }
-            $this->content->text .='</div>';
+            
+            $list = html_writer::tag('ul', $list_contents, array('id' => 'quickcourselist'));
+            
+            $this->content->text = $anchor.$form.$list;
 
-            require_js(array($CFG->wwwroot.'/blocks/quickcourselist/quickcourselist.js',
-            'yui_yahoo',
-            'yui_dom',
-            'yui_event',
-            'yui_connection'));
-            $this->content->text.='<script type="text/javascript">var wwwroot = "'.$CFG->wwwroot.'"; var xhr; var instanceid = '.$this->instance->id.'</script>';
         }
         $this->content->footer='';
         return $this->content;

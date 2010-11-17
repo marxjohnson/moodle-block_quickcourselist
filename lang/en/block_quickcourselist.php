@@ -26,6 +26,9 @@
  */
 
 $string['blockname']         = 'Quick Course List';
+$string['loading']  = 'Loading...';
+$string['pluginname']   =   'Quick Course List';
+$string['pluginnameplural']   =   'Quick Course Lists';
 $string['quickcourselist:use']         = 'Use Quickcourse List';
 $string['quickcourselist']         = 'Quick Course List';
 
