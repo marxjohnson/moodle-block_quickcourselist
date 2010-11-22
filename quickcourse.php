@@ -33,18 +33,23 @@ $course = required_param('course', PARAM_TEXT);
 
 if (has_capability('block/quickcourselist:use', $context_block)) {
 
-    $output = '';
-    if(!empty($course)) {
-        $query='SELECT id,shortname,fullname FROM '.$CFG->prefix.'course WHERE id <>'.SITEID.' AND (shortname LIKE \'%'.$course.'%\' OR fullname LIKE \'%'.$course.'%\')';
-            if(!has_capability('moodle/course:viewhiddencourses',$context_block)){$query.=' AND visible=1';}
+    $output = array();
+    if (!empty($course)) {
+        $params = array(SITEID, "%$course%", "%$course%");
+        $where = 'id != ? AND (shortname LIKE ? OR fullname LIKE ?)';
+            if(!has_capability('moodle/course:viewhiddencourses',$context_block)){
+                $where .= ' AND visible=1';
+            }
 
-            if($courses=get_records_sql($query)) {
+            if($courses = $DB->get_recordset_select('course', $where, $params, 'shortname', 'id, shortname, fullname')) {
                 foreach ($courses as $course) {
-                    $output .= '<div><a href="'.$CFG->wwwroot.'/course/view.php?id='.$course->id.'">'.$course->shortname.': '.$course->fullname.'</a></div>'."\n";
+                    $output[] = $course;
                 }
+                $courses->close();
             }
     }
-    echo $output;
+    header('Content-Type: application/json');
+    echo json_encode($output);
 
 } else {
 	header('HTTP/1.1 401 Not Authorized');

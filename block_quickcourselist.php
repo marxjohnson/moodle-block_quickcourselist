@@ -57,9 +57,9 @@ class block_quickcourselist extends block_base {
             $list_contents = '';
             $anchor = html_writer::tag('a', '', array('name' => 'quickcourselistanchor'));
             $input = html_writer::empty_tag('input', array('autocomplete' => 'off', 'name' => 'quickcourselistsearch', 'id' => 'quickcourselistsearch', 'value' => $search));
-            $progress = html_writer::empty_tag('img', array('src' => $this->page->theme->pix_url('i/loading_small', 'moodle'), 'class' => 'quickcourseprogress', 'alt' => get_string('loading', 'block_quickcourselist')));
+            $progress = html_writer::empty_tag('img', array('src' => $this->page->theme->pix_url('i/loading_small', 'moodle'), 'class' => 'quickcourseprogress', 'id' => 'quickcourseprogress', 'alt' => get_string('loading', 'block_quickcourselist')));
             $submit = html_writer::empty_tag('input', array('type' => 'submit', 'name' => 'quickcoursesubmit', 'class' => 'submitbutton', 'value' => get_string('search')));
-            $form = html_writer::tag('form', $input.$progress.$submit, array('method' => 'post', 'action' => $this->page->url->out().'#quickcourselistanchor'));
+            $form = html_writer::tag('form', $input.$progress.$submit, array('id' => 'quickcourseform', 'method' => 'post', 'action' => $this->page->url->out().'#quickcourselistanchor'));
             
             if(!empty($quickcoursesubmit)) {
                 $params = array(SITEID, "%$search%", "%$search%");
@@ -84,9 +84,18 @@ class block_quickcourselist extends block_base {
             $this->content->text = $anchor.$form.$list;
 
         }
+        $jsmodule = array(
+            'name'  =>  'block_quickcourselist',
+            'fullpath'  =>  '/blocks/quickcourselist/module.js',
+            'requires'  =>  array('base', 'node', 'json', 'io')
+        );
+        $jsdata = array(
+            'instanceid' => $this->instance->id
+        );
+
+        $this->page->requires->js_init_call('M.block_quickcourselist.init', $jsdata, false, $jsmodule);
         $this->content->footer='';
         return $this->content;
-
     }
 }
 ?>
