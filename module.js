@@ -8,23 +8,31 @@ M.block_quickcourselist = {
         this.searchbox = Y.one('#quickcourselistsearch');
         this.xhr = null;
         
-        Y.on('keyup', this.search, '#quickcourselistsearch');
-        Y.on('submit', this.search, '#quickcourseform');
+        Y.on('keyup', this.search_on_type, '#quickcourselistsearch');
+        Y.on('submit', this.search_on_submit, '#quickcourseform');
     },
 
-    search: function(e) {
-        e.preventDefault();
-        var block = M.block_quickcourselist;
-        var Y = M.block_quickcourselist.Y;
-        var searchstring = block.searchbox.get('value');
+    search_on_type: function(e) {
+        var searchstring = e.target.get('value');
+        M.block_quickcourselist.search(searchstring);
+    },
 
+    search_on_submit: function(e) {
+        e.preventDefault();
+        var searchstring = e.target.getById('quickcourselistsearch').get('value');
+        M.block_quickcourselist.search(searchstring);
+    },
+
+    search: function(string) {
+        
+        var Y = this.Y;
         uri = M.cfg.wwwroot+'/blocks/quickcourselist/quickcourse.php';
-        if (block.xhr != null) {
-            block.xhr.abort();
+        if (this.xhr != null) {
+            this.xhr.abort();
         }
-        block.progress.setStyle('visibility', 'visible');
-        block.xhr = Y.io(uri, {
-            data: 'course='+searchstring+'&instanceid='+M.block_quickcourselist.instanceid,
+        this.progress.setStyle('visibility', 'visible');
+        this.xhr = Y.io(uri, {
+            data: 'course='+string+'&instanceid='+this.instanceid,
             on: {
                 success: function(id, o) {
                     var courses = Y.JSON.parse(o.responseText);
