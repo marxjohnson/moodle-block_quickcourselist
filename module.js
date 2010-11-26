@@ -4,7 +4,6 @@ M.block_quickcourselist = {
         this.instanceid = instanceid;
                 
         this.progress = Y.one('#quickcourseprogress');
-        this.list = Y.one('#quickcourselist');
         this.xhr = null;
         
         Y.on('keyup', this.search_on_type, '#quickcourselistsearch');
@@ -42,7 +41,7 @@ M.block_quickcourselist = {
                             list.appendChild(Y.Node.create('<li><a href="'+M.cfg.wwwroot+'/course/view.php?id='+courses[c].id+'">'+courses[c].shortname+' '+courses[c].fullname+'</a></li>'));
                         }                     
                     }
-                    block.list.replace(list);
+                    Y.one('#quickcourselist').replace(list);
                     list.setAttribute('id', 'quickcourselist');
                     block.progress.setStyle('visibility', 'hidden');
                 },
