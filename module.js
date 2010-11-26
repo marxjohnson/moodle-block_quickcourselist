@@ -4,8 +4,7 @@ M.block_quickcourselist = {
         this.instanceid = instanceid;
                 
         this.progress = Y.one('#quickcourseprogress');
-        this.listcontainer = Y.one('#quickcourselist');
-        this.searchbox = Y.one('#quickcourselistsearch');
+        this.list = Y.one('#quickcourselist');
         this.xhr = null;
         
         Y.on('keyup', this.search_on_type, '#quickcourselistsearch');
@@ -37,15 +36,14 @@ M.block_quickcourselist = {
                 success: function(id, o) {
                     var courses = Y.JSON.parse(o.responseText);
                     var block = M.block_quickcourselist;
-                    var list = '';
-                    if (courses.length > 0) {
-                        list = '<ul>';
+                    list = Y.Node.create('<ul />');
+                    if (courses.length > 0) {                        
                         for (c in courses) {
-                            list += '<li><a href="'+M.cfg.wwwroot+'/course/view.php?id='+courses[c].id+'">'+courses[c].shortname+' '+courses[c].fullname+'</a></li>';
-                        }
-                        list += '</ul>';                        
+                            list.appendChild(Y.Node.create('<li><a href="'+M.cfg.wwwroot+'/course/view.php?id='+courses[c].id+'">'+courses[c].shortname+' '+courses[c].fullname+'</a></li>'));
+                        }                     
                     }
-                    block.listcontainer.set('innerHTML', list);
+                    block.list.replace(list);
+                    list.setAttribute('id', 'quickcourselist');
                     block.progress.setStyle('visibility', 'hidden');
                 },
                 failure: function(id, o) {
@@ -53,7 +51,9 @@ M.block_quickcourselist = {
                         var block = M.block_quickcourselist;
                         block.progress.setStyle('visibility', 'hidden');
                         if (o.statusText !== undefined) {
-                            block.listcontainer.set('innerHTML', o.statusText);
+                            var list = Y.Node.create('<p>'+o.statusText+'</p>');
+                            block.list.replace(list);
+                            list.set('id', 'quickcourselist');
                         }
                     }
                 }
