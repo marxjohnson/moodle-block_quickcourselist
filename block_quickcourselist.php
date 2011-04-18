@@ -34,7 +34,7 @@ class block_quickcourselist extends block_base {
 
     //stop it showing up on any add block lists
     function applicable_formats() {
-        return (array('all' => false,'site'=>true));
+        return (array('all' => false,'site'=>true,'my'=>true));
     }
 
     function preferred_width() {
