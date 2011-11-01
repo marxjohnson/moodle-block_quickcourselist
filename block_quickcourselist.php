@@ -92,7 +92,7 @@ class block_quickcourselist extends block_base {
         $jsdata = array(
             'instanceid' => $this->instance->id
         );
-
+        $this->page->requires->js('/blocks/quickcourselist/jquery.js');
         $this->page->requires->js_init_call('M.block_quickcourselist.init', $jsdata, false, $jsmodule);
         $this->content->footer='';
         return $this->content;
