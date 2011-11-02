@@ -10,7 +10,7 @@ M.block_quickcourselist = {
             var searchstring = e.target.get('value');
             M.block_quickcourselist.search(searchstring);
         });
-        Y.one('#quickcourseform').('submit', function(e) {
+        Y.one('#quickcourseform').on('submit', function(e) {
             e.preventDefault();
             var searchstring = e.target.getById('quickcourselistsearch').get('value');
             M.block_quickcourselist.search(searchstring);
