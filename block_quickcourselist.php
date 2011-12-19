@@ -90,7 +90,8 @@ class block_quickcourselist extends block_base {
             'requires'  =>  array('base', 'node', 'json', 'io')
         );
         $jsdata = array(
-            'instanceid' => $this->instance->id
+            'instanceid' => $this->instance->id,
+            'sesskey' => sesskey()
         );
 
         $this->page->requires->js_init_call('M.block_quickcourselist.init', $jsdata, false, $jsmodule);

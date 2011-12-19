@@ -26,7 +26,7 @@ M.block_quickcourselist = {
         }
         this.progress.setStyle('visibility', 'visible');
         this.xhr = Y.io(uri, {
-            data: 'course='+string+'&instanceid='+this.instanceid,
+            data: 'course='+string+'&instanceid='+this.instanceid+'&sesskey='+this.sesskey,
             on: {
                 success: function(id, o) {
                     var courses = Y.JSON.parse(o.responseText);

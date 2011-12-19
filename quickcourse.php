@@ -25,13 +25,14 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */  
 
+define('AJAX_SCRIPT', true);
 require_once('../../config.php');
 
 $instanceid = required_param('instanceid', PARAM_INT);
 $context_block = get_context_instance(CONTEXT_BLOCK, $instanceid);
 $course = required_param('course', PARAM_TEXT);
 
-if (has_capability('block/quickcourselist:use', $context_block)) {
+if (isloggedin() && has_capability('block/quickcourselist:use', $context) && confirm_sesskey()) {
 
     $output = array();
     if (!empty($course)) {
