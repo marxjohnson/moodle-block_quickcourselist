@@ -1,6 +1,10 @@
 M.block_quickcourselist = {
-    init: function(Y, instanceid) {
+
+    sesskey: null,
+
+    init: function(Y, instanceid, sesskey) {
         this.Y = Y;
+        this.sesskey = sesskey;
         this.instanceid = instanceid;
 
         this.progress = Y.one('#quickcourseprogress');
@@ -8,13 +12,13 @@ M.block_quickcourselist = {
 
         Y.one('#quickcourselistsearch').on('keyup', function(e) {
             var searchstring = e.target.get('value');
-            M.block_quickcourselist.search(searchstring);
-        });
+            this.search(searchstring);
+        }, this);
         Y.one('#quickcourseform').on('submit', function(e) {
             e.preventDefault();
             var searchstring = e.target.getById('quickcourselistsearch').get('value');
-            M.block_quickcourselist.search(searchstring);
-        });
+            this.search(searchstring);
+        }, this);
     },
 
     search: function(string) {
@@ -27,10 +31,10 @@ M.block_quickcourselist = {
         this.progress.setStyle('visibility', 'visible');
         this.xhr = Y.io(uri, {
             data: 'course='+string+'&instanceid='+this.instanceid+'&sesskey='+this.sesskey,
+            context: this,
             on: {
                 success: function(id, o) {
                     var courses = Y.JSON.parse(o.responseText);
-                    var block = M.block_quickcourselist;
                     list = Y.Node.create('<ul />');
                     if (courses.length > 0) {
                         Y.Array.each(courses, function(course) {
@@ -39,12 +43,11 @@ M.block_quickcourselist = {
                     }
                     Y.one('#quickcourselist').replace(list);
                     list.setAttribute('id', 'quickcourselist');
-                    block.progress.setStyle('visibility', 'hidden');
+                    this.progress.setStyle('visibility', 'hidden');
                 },
                 failure: function(id, o) {
                     if (o.statusText != 'abort') {
-                        var block = M.block_quickcourselist;
-                        block.progress.setStyle('visibility', 'hidden');
+                        this.progress.setStyle('visibility', 'hidden');
                         if (o.statusText !== undefined) {
                             var list = Y.Node.create('<p>'+o.statusText+'</p>');
                             Y.one('#quickcourselist').replace(list);

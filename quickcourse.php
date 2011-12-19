@@ -18,18 +18,17 @@
 /**
  * Server-side script for generating response to AJAX search request
  *
- * @package    block
- * @subpackage  quickcourselist
+ * @package    block_quickcourselist
  * @author      Mark Johnson <mark.johnson@tauntons.ac.uk>
  * @copyright   2010 Tauntons College, UK
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */  
+ */
 
 define('AJAX_SCRIPT', true);
 require_once('../../config.php');
 
 $instanceid = required_param('instanceid', PARAM_INT);
-$context_block = get_context_instance(CONTEXT_BLOCK, $instanceid);
+$context = get_context_instance(CONTEXT_BLOCK, $instanceid);
 $course = required_param('course', PARAM_TEXT);
 
 if (isloggedin() && has_capability('block/quickcourselist:use', $context) && confirm_sesskey()) {
@@ -38,22 +37,22 @@ if (isloggedin() && has_capability('block/quickcourselist:use', $context) && con
     if (!empty($course)) {
         $params = array(SITEID, "%$course%", "%$course%");
         $where = 'id != ? AND (shortname LIKE ? OR fullname LIKE ?)';
-            if(!has_capability('moodle/course:viewhiddencourses',$context_block)){
-                $where .= ' AND visible=1';
-            }
+        if (!has_capability('moodle/course:viewhiddencourses', $context)) {
+            $where .= ' AND visible=1';
+        }
 
-            if($courses = $DB->get_recordset_select('course', $where, $params, 'shortname', 'id, shortname, fullname')) {
-                foreach ($courses as $course) {
-                    $output[] = $course;
-                }
-                $courses->close();
+        $order = 'shortname';
+        $fields = 'id, shortname, fullname';
+        if ($courses = $DB->get_recordset_select('course', $where, $params, $order, $fields)) {
+            foreach ($courses as $course) {
+                $output[] = $course;
             }
+            $courses->close();
+        }
     }
     header('Content-Type: application/json');
     echo json_encode($output);
 
 } else {
-	header('HTTP/1.1 401 Not Authorized');
+    header('HTTP/1.1 401 Not Authorized');
 }
-
-?>

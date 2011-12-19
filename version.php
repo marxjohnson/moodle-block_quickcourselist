@@ -16,13 +16,16 @@
 
 
 /**
- * Defines the version number for the Quick Course List block
+ * Defines the metadata for the Quick Course List block
  *
- * @package    blocks
- * @subpackage  quickcourselist
+ * @package    block_quickcourselist
  * @author      Mark Johnson <mark.johnson@tauntons.ac.uk>
  * @copyright   2010 Tauntons College, UK
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 $plugin->version = 2010111600;
+$plugin->requires = 2010112400;
+$plugin->component = 'block_quickfindlist';
+$plugin->maturity = MATURITY_STABLE;
+$plugin->release = '2.0 (Build: 2010111600)';
