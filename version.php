@@ -26,6 +26,6 @@
 
 $plugin->version = 2010111600;
 $plugin->requires = 2010112400;
-$plugin->component = 'block_quickfindlist';
+$plugin->component = 'block_quickcourselist';
 $plugin->maturity = MATURITY_STABLE;
 $plugin->release = '2.0 (Build: 2010111600)';
