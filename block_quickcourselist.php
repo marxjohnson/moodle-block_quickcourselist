@@ -113,21 +113,21 @@ class block_quickcourselist extends block_base {
 
             $this->content->text = $anchor.$form.$list;
 
-        }
-        $jsmodule = array(
-            'name'  =>  'block_quickcourselist',
-            'fullpath'  =>  '/blocks/quickcourselist/module.js',
-            'requires'  =>  array('base', 'node', 'json', 'io')
-        );
-        $jsdata = array(
-            'instanceid' => $this->instance->id,
-            'sesskey' => sesskey()
-        );
+            $jsmodule = array(
+                'name'  =>  'block_quickcourselist',
+                'fullpath'  =>  '/blocks/quickcourselist/module.js',
+                'requires'  =>  array('base', 'node', 'json', 'io')
+            );
+            $jsdata = array(
+                'instanceid' => $this->instance->id,
+                'sesskey' => sesskey()
+            );
 
-        $this->page->requires->js_init_call('M.block_quickcourselist.init',
-                                            $jsdata,
-                                            false,
-                                            $jsmodule);
+            $this->page->requires->js_init_call('M.block_quickcourselist.init',
+                                                $jsdata,
+                                                false,
+                                                $jsmodule);
+        }
         $this->content->footer='';
         return $this->content;
     }
