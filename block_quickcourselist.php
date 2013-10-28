@@ -52,7 +52,8 @@ class block_quickcourselist extends block_base {
         if ($this->content !== null) {
             return $this->content;
         }
-
+		
+        //$this->content = new StdClass();
         $context_block = get_context_instance(CONTEXT_BLOCK, $this->instance->id);
         $search = optional_param('quickcourselistsearch', '', PARAM_TEXT);
         $quickcoursesubmit = optional_param('quickcoursesubmit', false, PARAM_TEXT);
