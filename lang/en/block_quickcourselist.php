@@ -25,9 +25,11 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['blockname']         = 'Quick Course List';
-$string['loading']  = 'Loading...';
-$string['pluginname']   =   'Quick Course List';
-$string['pluginnameplural']   =   'Quick Course Lists';
-$string['quickcourselist:use']         = 'Use Quickcourse List';
-$string['quickcourselist']         = 'Quick Course List';
+$string['blockname'] = 'Quick Course List';
+$string['loading'] = 'Loading...';
+$string['pluginname'] = 'Quick Course List';
+$string['pluginnameplural'] = 'Quick Course Lists';
+$string['quickcourselist:use'] = 'Use Quickcourse List';
+$string['quickcourselist'] = 'Quick Course List';
+$string['displaymode'] = 'Format of search results';
+$string['displaymodedescription'] = 'In which way the results should be displayed.';

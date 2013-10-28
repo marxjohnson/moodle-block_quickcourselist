@@ -2,10 +2,11 @@ M.block_quickcourselist = {
 
     sesskey: null,
 
-    init: function(Y, instanceid, sesskey) {
+    init: function(Y, instanceid, sesskey, displaymode) {
         this.Y = Y;
         this.sesskey = sesskey;
         this.instanceid = instanceid;
+        this.displaymode = displaymode;
 
         this.progress = Y.one('#quickcourseprogress');
         this.xhr = null;
@@ -29,6 +30,7 @@ M.block_quickcourselist = {
             this.xhr.abort();
         }
         this.progress.setStyle('visibility', 'visible');
+        var displaymode = this.displaymode;
         this.xhr = Y.io(uri, {
             data: 'course='+string+'&instanceid='+this.instanceid+'&sesskey='+this.sesskey,
             context: this,
@@ -38,7 +40,12 @@ M.block_quickcourselist = {
                     list = Y.Node.create('<ul />');
                     if (courses.length > 0) {
                         Y.Array.each(courses, function(course) {
-                            Y.Node.create('<li><a href="'+M.cfg.wwwroot+'/course/view.php?id='+course.id+'">'+course.shortname+' '+course.fullname+'</a></li>').appendTo(list);
+                        	switch (displaymode) {
+                        		case '1': displaystr = course.shortname; break;
+                        		case '2': displaystr = course.fullname; break;
+                        		case '3': displaystr = course.shortname+': '+course.fullname; break;
+                        	}
+                            Y.Node.create('<li><a href="'+M.cfg.wwwroot+'/course/view.php?id='+course.id+'">'+displaystr+'</a></li>').appendTo(list);
                         });
                     }
                     Y.one('#quickcourselist').replace(list);
