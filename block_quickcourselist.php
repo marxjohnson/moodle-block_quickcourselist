@@ -117,7 +117,9 @@ class block_quickcourselist extends block_base {
                     }
                 }
             }
-
+			if(!isset($config->displaymode)) {
+				$config->displaymode= '3';
+			}
             $list = html_writer::tag('ul', $list_contents, array('id' => 'quickcourselist'));
 
             $this->content->text = $anchor.$form.$list;
