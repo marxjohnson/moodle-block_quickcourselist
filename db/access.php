@@ -26,16 +26,6 @@
 
 $capabilities = array(
 
-    'block/quickcourselist:addinstance' => array(
-
-        'captype' => 'view',
-        'contextlevel' => CONTEXT_SYSTEM,
-        'legacy' => array(
-            'editingteacher' => CAP_ALLOW,
-            'coursecreator' => CAP_ALLOW,
-            'manager' => CAP_ALLOW
-        )
-    ),
     'block/quickcourselist:use' => array(
 
         'captype' => 'view',
@@ -46,5 +36,32 @@ $capabilities = array(
             'coursecreator' => CAP_ALLOW,
             'manager' => CAP_ALLOW
         )
-    )
+    ),
+    'block/quickcourselist:myaddinstance' => array(
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_SYSTEM,
+        'archetypes' => array(
+            'user' => CAP_ALLOW
+        ),
+        'clonepermissionsfrom' => 'moodle/my:manageblocks'
+    ),    
+    'block/quickcourselist:addinstance' => array(
+        'riskbitmask' => RISK_SPAM | RISK_XSS,
+        
+        'captype' => 'write',
+            'contextlevel' => CONTEXT_BLOCK,
+            'archetypes' => array(
+                'editingteacher' => CAP_ALLOW,
+                'manager' => CAP_ALLOW
+            ),
+        'clonepermissionsfrom' => 'moodle/site:manageblocks'
+    ),
 );
+
+function applicable_formats() {
+    if (has_capability('block/quickcourselist:use', get_context_instance(CONTEXT_SYSTEM))) {
+        return (array('all' => true));
+    } else {
+        return (array('all' => false));
+    }
+}

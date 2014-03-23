@@ -20,16 +20,16 @@
  *
  * @package    blocks
  * @subpackage  quickcourselist
- * @author      Mark Johnson <mark.johnson@tauntons.ac.uk>
- * @copyright   2010 Tauntons College, UK
+ * @author      Alexander Kiy <alekiy@uni-potsdam.de>
+ * @copyright   2013 University of Potsdam, GER
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['blockname'] = 'Quick Course List';
-$string['loading'] = 'Loading...';
-$string['pluginname'] = 'Quick Course List';
-$string['pluginnameplural'] = 'Quick Course Lists';
-$string['quickcourselist:use'] = 'Use Quickcourse List';
-$string['quickcourselist'] = 'Quick Course List';
-$string['displaymode'] = 'Format of search results';
-$string['displaymodedescription'] = 'In which way the results should be displayed.';
+$string['blockname'] = 'Kurssuche';
+$string['loading'] = 'Lade...';
+$string['pluginname'] = 'Kurssuche';
+$string['pluginnameplural'] = 'Kurssuche';
+$string['quickcourselist:use'] = 'Kurssuche benutzen';
+$string['quickcourselist'] = 'Kurssuche';
+$string['displaymode'] = 'Ergbnisanzeigeformat';
+$string['displaymodedescription'] = 'In welcher Form sollen die Suchergebnisse angezeigt werden.';
