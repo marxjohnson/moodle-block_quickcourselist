@@ -24,8 +24,8 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$plugin->version = 2014011300;
+$plugin->version = 2014032300;
 $plugin->requires = 2010112400;
 $plugin->component = 'block_quickcourselist';
 $plugin->maturity = MATURITY_STABLE;
-$plugin->release = '2.0.1';
+$plugin->release = '2.0.2';

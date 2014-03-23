@@ -26,6 +26,16 @@
 
 $capabilities = array(
 
+    'block/quickcourselist:addinstance' => array(
+
+        'captype' => 'view',
+        'contextlevel' => CONTEXT_SYSTEM,
+        'legacy' => array(
+            'editingteacher' => CAP_ALLOW,
+            'coursecreator' => CAP_ALLOW,
+            'manager' => CAP_ALLOW
+        )
+    ),
     'block/quickcourselist:use' => array(
 
         'captype' => 'view',
