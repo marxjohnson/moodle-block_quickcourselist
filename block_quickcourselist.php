@@ -41,6 +41,10 @@ class block_quickcourselist extends block_base {
         return (array('all' => false, 'site' => true, 'my' => true));
     }
 
+    public function has_config() {
+        return true;
+    }
+
     /**
      * Displays the form for searching courses, and the results if a search as been submitted
      *
