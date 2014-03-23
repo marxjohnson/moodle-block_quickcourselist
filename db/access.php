@@ -57,11 +57,3 @@ $capabilities = array(
         'clonepermissionsfrom' => 'moodle/site:manageblocks'
     ),
 );
-
-function applicable_formats() {
-    if (has_capability('block/quickcourselist:use', get_context_instance(CONTEXT_SYSTEM))) {
-        return (array('all' => true));
-    } else {
-        return (array('all' => false));
-    }
-}
