@@ -28,4 +28,9 @@ if ($ADMIN->fulltree) {
 
 	$settings->add(new admin_setting_configselect('block_quickcourselist/displaymode', get_string('displaymode', 'block_quickcourselist'), 
 						get_string('displaymodedescription', 'block_quickcourselist'), $displaymode[3], $displaymode));
+
+	$settings->add(new admin_setting_heading('block_quickcourselist/title', get_string('title', 'block_quickcourselist'), ''));
+
+	// Possible display modes
+	$settings->add(new admin_setting_configtext('block_quickcourselist/title', get_string('title', 'block_quickcourselist'), '', get_string('blockname', 'block_quickcourselist')));
 }

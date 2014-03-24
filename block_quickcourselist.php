@@ -31,9 +31,16 @@
  */
 class block_quickcourselist extends block_base {
 
+    private $globalconf;
+    
     public function init() {
         $this->content_type = BLOCK_TYPE_TEXT;
-        $this->title = get_string('quickcourselist', 'block_quickcourselist');
+        $this->globalconf = get_config('block_quickcourselist');
+        if (isset($this->globalconf->title) && !empty($this->globalconf->title)) {
+            $this->title = $this->globalconf->title;
+        } else {
+            $this->title = get_string('quickcourselist', 'block_quickcourselist');
+        }
     }
 
     //stop it showing up on any add block lists
@@ -56,7 +63,6 @@ class block_quickcourselist extends block_base {
         if ($this->content !== null) {
             return $this->content;
         }
-        $config = get_config('block_quickcourselist');
 		
         $this->content = new StdClass();
         $context_block = context_block::instance($this->instance->id);
@@ -107,7 +113,7 @@ class block_quickcourselist extends block_base {
                     foreach ($courses as $course) {
                         $url = new moodle_url('/course/view.php', array('id' => $course->id));
                         $resultstr = null;
-                        switch ($config->displaymode):
+                        switch ($this->globalconf->displaymode):
                     		case 1: $resultstr = $course->shortname; break;
                     		case 2: $resultstr = $course->fullname; break;
                     		case 3: $resultstr = $course->shortname.': '.$course->fullname; break;
@@ -121,8 +127,8 @@ class block_quickcourselist extends block_base {
                     }
                 }
             }
-			if(!isset($config->displaymode)) {
-				$config->displaymode= '3';
+			if(!isset($this->globalconf->displaymode)) {
+				$this->globalconf->displaymode= '3';
 			}
             $list = html_writer::tag('ul', $list_contents, array('id' => 'quickcourselist'));
 
@@ -136,7 +142,7 @@ class block_quickcourselist extends block_base {
             $jsdata = array(
                 'instanceid' => $this->instance->id,
                 'sesskey' => sesskey(),
-            	'displaymode' => $config->displaymode
+            	'displaymode' => $this->globalconf->displaymode
             );
 
             $this->page->requires->js_init_call('M.block_quickcourselist.init',

@@ -33,3 +33,4 @@ $string['quickcourselist:use'] = 'Use Quickcourse List';
 $string['quickcourselist'] = 'Quick Course List';
 $string['displaymode'] = 'Format of search results';
 $string['displaymodedescription'] = 'In which way the results should be displayed.';
+$string['title'] = 'Block Title';
