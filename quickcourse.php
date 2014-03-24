@@ -30,19 +30,38 @@ require_once('../../config.php');
 $instanceid = required_param('instanceid', PARAM_INT);
 $context = get_context_instance(CONTEXT_BLOCK, $instanceid);
 $course = required_param('course', PARAM_TEXT);
+$config = get_config('block_quickcourselist');
 
 if (isloggedin() && has_capability('block/quickcourselist:use', $context) && confirm_sesskey()) {
 
     $output = array();
     if (!empty($course)) {
-        $params = array(SITEID, "%$course%", "%$course%");
-        $where = 'id != ? AND (shortname LIKE ? OR fullname LIKE ?)';
+        $params = array(SITEID);
+        $where = 'id != ? AND (';
+        if ($config->splitterms) {
+            $terms = explode(' ', $course);
+            $like = '%1$s LIKE';
+            foreach ($terms as $key => $term) {
+                $like .= ' ?';
+                if ($key < count($terms)-1) {
+                    $like .= ' AND %1$s LIKE';
+                }
+                $terms[$key] = '%'.$term.'%';
+            }
+            $params = array_merge($params, $terms, $terms);
+            $where .= sprintf($like, 'shortname').' OR '.sprintf($like, 'fullname');
+        } else {
+            $params = array_merge($params, array("%$course%", "%$course%"));
+            $where .= 'shortname LIKE ? OR fullname LIKE ?';
+        }
+        $where .= ')';
         if (!has_capability('moodle/course:viewhiddencourses', $context)) {
             $where .= ' AND visible=1';
         }
 
         $order = 'shortname';
         $fields = 'id, shortname, fullname';
+        
         if ($courses = $DB->get_recordset_select('course', $where, $params, $order, $fields)) {
             foreach ($courses as $course) {
                 $output[] = $course;

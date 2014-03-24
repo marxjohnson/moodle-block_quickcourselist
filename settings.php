@@ -31,6 +31,9 @@ if ($ADMIN->fulltree) {
 
 	$settings->add(new admin_setting_heading('block_quickcourselist/title', get_string('title', 'block_quickcourselist'), ''));
 
-	// Possible display modes
 	$settings->add(new admin_setting_configtext('block_quickcourselist/title', get_string('title', 'block_quickcourselist'), '', get_string('blockname', 'block_quickcourselist')));
+    
+	$settings->add(new admin_setting_heading('block_quickcourselist/splitterms', get_string('splitterms', 'block_quickcourselist'), ''));
+
+	$settings->add(new admin_setting_configcheckbox('block_quickcourselist/splitterms', get_string('splitterms', 'block_quickcourselist'), get_string('splittermsdescription', 'block_quickcourselist'), 0));
 }
