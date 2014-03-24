@@ -45,7 +45,12 @@ class block_quickcourselist extends block_base {
 
     //stop it showing up on any add block lists
     public function applicable_formats() {
-        return (array('all' => false, 'site' => true, 'my' => true));
+        return (array(  
+            'all' => false, 
+            'site' => true, 
+            'my' => true, 
+            'course-index' => true
+        ));
     }
 
     public function has_config() {
