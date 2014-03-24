@@ -41,9 +41,8 @@ $capabilities = array(
         'captype' => 'write',
         'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
-            'user' => CAP_ALLOW
-        ),
-        'clonepermissionsfrom' => 'moodle/my:manageblocks'
+            'manager' => CAP_ALLOW
+        )
     ),    
     'block/quickcourselist:addinstance' => array(
         'riskbitmask' => RISK_SPAM | RISK_XSS,
