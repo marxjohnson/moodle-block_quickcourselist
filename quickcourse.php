@@ -30,6 +30,7 @@ require_once('../../config.php');
 $instanceid = required_param('instanceid', PARAM_INT);
 $context = get_context_instance(CONTEXT_BLOCK, $instanceid);
 $course = required_param('course', PARAM_TEXT);
+$pagecontextid = required_param('contextid', PARAM_INT);
 $config = get_config('block_quickcourselist');
 
 if (isloggedin() && has_capability('block/quickcourselist:use', $context) && confirm_sesskey()) {
@@ -57,6 +58,13 @@ if (isloggedin() && has_capability('block/quickcourselist:use', $context) && con
         $where .= ')';
         if (!has_capability('moodle/course:viewhiddencourses', $context)) {
             $where .= ' AND visible=1';
+        }
+        if ($config->restrictcontext) {
+            $catcontext = context::instance_by_id($pagecontextid, IGNORE_MISSING);
+            if ($catcontext && $catcontext->get_level_name() == get_string('category')) {
+                $where .= ' AND category = ?';
+                $params[] = $catcontext->instanceid;
+            }
         }
 
         $order = 'shortname';

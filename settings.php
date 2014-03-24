@@ -36,4 +36,8 @@ if ($ADMIN->fulltree) {
 	$settings->add(new admin_setting_heading('block_quickcourselist/splitterms', get_string('splitterms', 'block_quickcourselist'), ''));
 
 	$settings->add(new admin_setting_configcheckbox('block_quickcourselist/splitterms', get_string('splitterms', 'block_quickcourselist'), get_string('splittermsdescription', 'block_quickcourselist'), 0));
+    
+	$settings->add(new admin_setting_heading('block_quickcourselist/restrictcontext', get_string('restrictcontext', 'block_quickcourselist'), ''));
+
+	$settings->add(new admin_setting_configcheckbox('block_quickcourselist/restrictcontext', get_string('restrictcontext', 'block_quickcourselist'), get_string('restrictcontextdescription', 'block_quickcourselist'), 0));
 }

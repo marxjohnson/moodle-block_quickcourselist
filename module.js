@@ -2,11 +2,12 @@ M.block_quickcourselist = {
 
     sesskey: null,
 
-    init: function(Y, instanceid, sesskey, displaymode) {
+    init: function(Y, instanceid, sesskey, displaymode, contextid) {
         this.Y = Y;
         this.sesskey = sesskey;
         this.instanceid = instanceid;
         this.displaymode = displaymode;
+        this.contextid = contextid;
 
         this.progress = Y.one('#quickcourseprogress');
         this.xhr = null;
@@ -32,7 +33,7 @@ M.block_quickcourselist = {
         this.progress.setStyle('visibility', 'visible');
         var displaymode = this.displaymode;
         this.xhr = Y.io(uri, {
-            data: 'course='+string+'&instanceid='+this.instanceid+'&sesskey='+this.sesskey,
+            data: 'course='+string+'&instanceid='+this.instanceid+'&sesskey='+this.sesskey+'&contextid='+this.contextid,
             context: this,
             on: {
                 success: function(id, o) {

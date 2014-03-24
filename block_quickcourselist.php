@@ -147,7 +147,8 @@ class block_quickcourselist extends block_base {
             $jsdata = array(
                 'instanceid' => $this->instance->id,
                 'sesskey' => sesskey(),
-            	'displaymode' => $this->globalconf->displaymode
+            	'displaymode' => $this->globalconf->displaymode,
+                'contextid' => $this->page->context->id
             );
 
             $this->page->requires->js_init_call('M.block_quickcourselist.init',
