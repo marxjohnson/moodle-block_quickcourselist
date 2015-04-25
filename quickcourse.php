@@ -24,11 +24,13 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-define('AJAX_SCRIPT', true);
+//define('AJAX_SCRIPT', true);
 require_once('../../config.php');
+require_once($CFG->dirroot . '/blocks/moodleblock.class.php');
+require_once($CFG->dirroot . '/blocks/quickcourselist/block_quickcourselist.php');
 
 $instanceid = required_param('instanceid', PARAM_INT);
-$context = get_context_instance(CONTEXT_BLOCK, $instanceid);
+$context = context_block::instance($instanceid);
 $course = required_param('course', PARAM_TEXT);
 $pagecontextid = required_param('contextid', PARAM_INT);
 $config = get_config('block_quickcourselist');
@@ -37,40 +39,11 @@ if (isloggedin() && has_capability('block/quickcourselist:use', $context) && con
 
     $output = array();
     if (!empty($course)) {
-        $params = array(SITEID);
-        $where = 'id != ? AND (';
-        if ($config->splitterms) {
-            $terms = explode(' ', $course);
-            $like = '%1$s LIKE';
-            foreach ($terms as $key => $term) {
-                $like .= ' ?';
-                if ($key < count($terms)-1) {
-                    $like .= ' AND %1$s LIKE';
-                }
-                $terms[$key] = '%'.$term.'%';
-            }
-            $params = array_merge($params, $terms, $terms);
-            $where .= sprintf($like, 'shortname').' OR '.sprintf($like, 'fullname');
-        } else {
-            $params = array_merge($params, array("%$course%", "%$course%"));
-            $where .= 'shortname LIKE ? OR fullname LIKE ?';
-        }
-        $where .= ')';
-        if (!has_capability('moodle/course:viewhiddencourses', $context)) {
-            $where .= ' AND visible=1';
-        }
-        if ($config->restrictcontext) {
-            $catcontext = context::instance_by_id($pagecontextid, IGNORE_MISSING);
-            if ($catcontext && $catcontext->get_level_name() == get_string('category')) {
-                $where .= ' AND category = ?';
-                $params[] = $catcontext->instanceid;
-            }
-        }
-
-        $order = 'shortname';
-        $fields = 'id, shortname, fullname';
+    $catcontext = context::instance_by_id($pagecontextid, IGNORE_MISSING);
+    $courses = block_quickcourselist::get_courses($course, $context, $config->splitterms, 
+                                                  $config->restrictcontext, $catcontext);
         
-        if ($courses = $DB->get_recordset_select('course', $where, $params, $order, $fields)) {
+        if (!empty($courses)) {
             foreach ($courses as $course) {
                 $output[] = $course;
             }

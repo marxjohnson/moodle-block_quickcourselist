@@ -68,12 +68,11 @@ class block_quickcourselist extends block_base {
         if ($this->content !== null) {
             return $this->content;
         }
-		
-        $this->content = new StdClass();
+        
+        $this->content = new stdClass();
         $context_block = context_block::instance($this->instance->id);
         $search = optional_param('quickcourselistsearch', '', PARAM_TEXT);
         $quickcoursesubmit = optional_param('quickcoursesubmit', false, PARAM_TEXT);
-
         if (has_capability('block/quickcourselist:use', $context_block)) {
 
             $list_contents = '';
@@ -107,28 +106,24 @@ class block_quickcourselist extends block_base {
             $form = html_writer::tag('form', $input.$progress.$submit, $formattrs);
 
             if (!empty($quickcoursesubmit)) {
-                $params = array(SITEID, "%$search%", "%$search%");
-                $where = 'id != ? AND (shortname LIKE ? OR fullname LIKE ?)';
 
-                if (!has_capability('moodle/course:viewhiddencourses', $context_block)) {
-                    $where .= ' AND visible = 1';
-                }
-
-                if ($courses = $DB->get_records_select('course', $where, $params)) {
+                $courses = self::get_courses($search, $context_block, $this->globalconf->splitterms, 
+                                             $this->globalconf->restrictcontext, $this->page->context); 
+                if (!empty($courses)) {
                     foreach ($courses as $course) {
                         $url = new moodle_url('/course/view.php', array('id' => $course->id));
-			$resultstr = null;
-			if (isset($this->globalconf->displaymode)) {
-			    $displaymode = $this->globalconf->displaymode;
-			} else {
-			    $displaymode = 3;
-			}
+                        $resultstr = null;
+                        if (isset($this->globalconf->displaymode)) {
+                            $displaymode = $this->globalconf->displaymode;
+                        } else {
+                            $displaymode = 3;
+                        }
                         switch ($displaymode):
-                    		case 1: $resultstr = $course->shortname; break;
-                    		case 2: $resultstr = $course->fullname; break;
-                    		case 3: $resultstr = $course->shortname.': '.$course->fullname; break;
-                    	endswitch;
-                    	
+                            case 1: $resultstr = $course->shortname; break;
+                            case 2: $resultstr = $course->fullname; break;
+                            default: $resultstr = $course->shortname.': '.$course->fullname; break;
+                        endswitch;
+                        
                         $link = html_writer::tag('a',
                                                  $resultstr,
                                                  array('href' => $url->out()));
@@ -137,9 +132,9 @@ class block_quickcourselist extends block_base {
                     }
                 }
             }
-			if(!isset($this->globalconf->displaymode)) {
-				$this->globalconf->displaymode= '3';
-			}
+            if(!isset($this->globalconf->displaymode)) {
+                $this->globalconf->displaymode = '3';
+            }
             $list = html_writer::tag('ul', $list_contents, array('id' => 'quickcourselist'));
 
             $this->content->text = $anchor.$form.$list;
@@ -152,7 +147,7 @@ class block_quickcourselist extends block_base {
             $jsdata = array(
                 'instanceid' => $this->instance->id,
                 'sesskey' => sesskey(),
-            	'displaymode' => $this->globalconf->displaymode,
+                'displaymode' => $this->globalconf->displaymode,
                 'contextid' => $this->page->context->id
             );
 
@@ -163,6 +158,45 @@ class block_quickcourselist extends block_base {
         }
         $this->content->footer='';
         return $this->content;
+    }
+
+    public static function get_courses($search, $blockcontext, $splitterms = false, 
+                                       $restrictcontext = false, $pagecontext = null) {
+        global $DB;
+        $params = array(SITEID);
+        $where = 'id != ? AND (';
+        if ($splitterms) {
+            $terms = explode(' ', $search);
+            $like = '%1$s LIKE';
+            foreach ($terms as $key => $term) {
+                $like .= ' ?';
+                if ($key < count($terms)-1) {
+                    $like .= ' AND %1$s LIKE';
+                }
+                $terms[$key] = '%'.$term.'%';
+            }
+            $params = array_merge($params, $terms, $terms);
+            $where .= sprintf($like, 'shortname').' OR '.sprintf($like, 'fullname');
+        } else {
+            $params = array_merge($params, array("%$search%", "%$search%"));
+            $where .= 'shortname LIKE ? OR fullname LIKE ?';
+        }
+        $where .= ')';
+        if (!has_capability('moodle/course:viewhiddencourses', $blockcontext)) {
+            $where .= ' AND visible=1';
+        }
+        if ($restrictcontext) {
+            if ($pagecontext && $pagecontext->get_level_name() == get_string('category')) {
+                $where .= ' AND category = ?';
+                $params[] = $pagecontext->instanceid;
+            }
+        }
+
+        $order = 'shortname';
+        $fields = 'id, shortname, fullname';
+
+        $courses = $DB->get_recordset_select('course', $where, $params, $order, $fields);
+    return $courses;
     }
 }
 
