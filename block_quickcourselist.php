@@ -117,8 +117,13 @@ class block_quickcourselist extends block_base {
                 if ($courses = $DB->get_records_select('course', $where, $params)) {
                     foreach ($courses as $course) {
                         $url = new moodle_url('/course/view.php', array('id' => $course->id));
-                        $resultstr = null;
-                        switch ($this->globalconf->displaymode):
+			$resultstr = null;
+			if (isset($this->globalconf->displaymode)) {
+			    $displaymode = $this->globalconf->displaymode;
+			} else {
+			    $displaymode = 3;
+			}
+                        switch ($displaymode):
                     		case 1: $resultstr = $course->shortname; break;
                     		case 2: $resultstr = $course->fullname; break;
                     		case 3: $resultstr = $course->shortname.': '.$course->fullname; break;
@@ -160,3 +165,4 @@ class block_quickcourselist extends block_base {
         return $this->content;
     }
 }
+
