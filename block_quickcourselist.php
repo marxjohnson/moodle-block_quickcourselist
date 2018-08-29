@@ -85,7 +85,7 @@ class block_quickcourselist extends block_base {
             );
             $input = html_writer::empty_tag('input', $inputattrs);
             $progressattrs = array(
-                'src' => $this->page->theme->pix_url('i/loading_small', 'moodle'),
+                'src' => $this->page->theme->image_url('i/loading_small', 'moodle'),
                 'class' => 'quickcourseprogress',
                 'id' => 'quickcourseprogress',
                 'alt' => get_string('loading', 'block_quickcourselist')
