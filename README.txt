@@ -1,3 +1,7 @@
+# This responsitory is archived.
+
+## The project is now maintained by Lesterhuis Training & Consultancy, their repository is at https://github.com/Lesterhuis-Training-en-Consultancy/moodle-block_quickcourselist
+
 Quick Course List Block for Moodle
 
 This block allows quick searching of Moodle courses, and displays a link to the course page.
